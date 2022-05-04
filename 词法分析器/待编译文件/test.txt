@@ -1,0 +1,25 @@
+int main() {
+	int n, e;
+	scanf("%d %d", &n, &e);
+
+	AGraph G;
+	G.n = n;
+	G.e = e;
+	ArcNode* tail[n];
+	bool vis[n];
+	G.vexlist = (VNode*)malloc(n * sizeof(VNode));
+	for(int i = 0; i < n; i ++) {
+		vis[i] = false;
+		G.vexlist[i].firstArc = NULL;
+	}
+
+	for(int i = 0; i < e; i ++) {
+		int u, v;
+		scanf("%d %d", &u, &v);
+		addEdge(G, tail, u, v);
+	}
+
+	for(int i = 0; i < n; i ++)
+		if(!vis[i])
+			DFS(G, i, vis);
+}

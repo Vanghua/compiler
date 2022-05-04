@@ -37,6 +37,9 @@ module.exports = {
     // 判断是否是换行
     judNewLine: c => c == "\n" ? "\n" : false,
 
+    // 判断是否为水平制表符
+    judTab: c => c == "\t" ? "\t" : false,
+
     // 判断词素是否全部由字母组成
     judAllAlphabet: function(s) {
         return Array.prototype.every.call(s, function (c) {
@@ -100,6 +103,34 @@ module.exports = {
                 return 44
             case "%":
                 return 47
+            case "(":
+                return 50
+            case ")":
+                return 51
+            case "[":
+                return 52
+            case "]":
+                return 53
+            case "{":
+                return 54
+            case "}":
+                return 55
+            case "=":
+                return 56
+            case ",":
+                return 59
+            case ".":
+                return 60
+            case ":":
+                return 61
+            case ";":
+                return 62
+            case "~":
+                return 63
+            case '"':
+                return 64
+            case "'":
+                return 65
         }
     }
 }

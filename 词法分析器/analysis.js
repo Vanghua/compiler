@@ -120,18 +120,16 @@ async function work() {
     let c, isFinished = false
     while(1) {
         // 如果全部扫描完毕，那么退出词法分析，输出词集
-        if(isFinished) {
-            console.log(tokens)
-            break
-        }
+        if(isFinished)
+            return tokens
         switch (state) {
             case 0: // 初态
                 c = await nextChar()
                 // 如果当前读到了eof，那么说明文件已读完
                 if(c == "eof")
                     isFinished = true
-                // 如果字符时空格回车或者换行，那么继续扫描下一个字符
-                if(utils.judBlank(c) || utils.judEnter(c) || utils.judNewLine(c)) {
+                // 如果字符时空格回车或者换行或者水平制表符，那么继续扫描下一个字符
+                if(utils.judBlank(c) || utils.judEnter(c) || utils.judNewLine(c) || utils.judTab(c)) {
                     ++ lex_begin
                     // 除了词素尾指针在扫描词素字符时可能越过当前缓冲区，还有一种情况是词素首指针和尾指针相等，
                     // 两者一直在扫描空格换行和回车，此时两者共同越过缓冲区
@@ -360,11 +358,66 @@ async function work() {
                 else
                     state = 45
                 break
-            case 45: // %
+            case 48: // %
                 isFinished = retract(c, 39)
                 break
-            case 46: // %=
+            case 49: // %=
                 back(40)
+                break
+            case 50: // (
+                back(44)
+                break
+            case 51: // )
+                back(45)
+                break
+            case 52: // [
+                back(55)
+                break
+            case 53: // ]
+                back(56)
+                break
+            case 54: // {
+                back(59)
+                break
+            case 55: // }
+                back(63)
+                break
+            case 56: // =系列(共有2种可能 =和==)
+                c = await nextChar()
+                if(c == "=")
+                    state = 58
+                else
+                    state = 57
+                break
+            case 57: // =
+                isFinished = retract(c, 72)
+                break
+            case 58: // ==
+                back(73)
+                break
+            case 59: // ,
+                back(48)
+                break
+            case 60: // .
+                back(49)
+                break
+            case 61: // :
+                back(52)
+                break
+            case 62: // ;
+                back(53)
+                break
+            case 63: // ~
+                back(64)
+                break
+            case 64: // "
+                back(78)
+                break
+            case 65: // '
+                back(82)
+                break
+            case 66: // ?
+                back(54)
                 break
         }
     }

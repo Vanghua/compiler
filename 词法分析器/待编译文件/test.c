@@ -1,7 +1,3 @@
-#include <malloc.h>
-#include <stdio.h>
-using namespace std;
-
 typedef struct ArcNode {
 	int adjvex;
 	int info;
@@ -15,7 +11,7 @@ typedef struct VNode {
 
 typedef struct AGraph {
 	int n, e;
-	VNode* vexlist;	
+	VNode* vexlist;
 }AGraph;
 
 void DFS(const AGraph &G, int p, bool* vis) {
@@ -31,7 +27,7 @@ void addEdge(AGraph &G, ArcNode** tail, int u, int v) {
 	ArcNode* edge = (ArcNode*)malloc(sizeof(ArcNode));
 	edge->adjvex = v;
 	edge->nextArc = NULL;
-	if(!G.vexlist[u].firstArc) 
+	if(!G.vexlist[u].firstArc)
 		tail[u] = G.vexlist[u].firstArc = edge;
 	else {
 		tail[u]->nextArc = edge;
