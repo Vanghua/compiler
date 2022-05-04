@@ -1,32 +1,4 @@
-// 保留字表，已按照字典序排序，便于折半查找
-const reserveWords = [
-    'auto',     'break',    'case',
-    'char',     'const',    'continue',
-    'default',  'do',       'double',
-    'else',     'enum',     'extern',
-    'float',    'for',      'goto',
-    'if',       'int',      'long',
-    'register', 'return',   'short',
-    'signed',   'sizeof',   'static',
-    'struct',   'switch',   'typedef',
-    'union',    'unsigned', 'void',
-    'volatile', 'while'
-]
-
-// 种别码表
-let type = [
-    ['auto', 1],     ['break', 2],    ['case', 3],
-    ['char', 4],     ['const', 5],    ['continue', 6],
-    ['default', 7],  ['do', 8],       ['double', 9],
-    ['else', 10],     ['enum', 11],     ['extern', 12],
-    ['float', 13],    ['for', 14],      ['goto', 15],
-    ['if', 16],       ['int', 17],      ['long', 18],
-    ['register', 19], ['return', 20],   ['short', 21],
-    ['signed', 22],   ['sizeof', 23],   ['static', 24],
-    ['struct', 25],   ['switch', 26],   ['typedef', 27],
-    ['union', 28],    ['unsigned', 29], ['void', 30],
-    ['volatile', 31], ['while', 32]
-]
+let { type, reserveWords } = require("./type.js")
 
 module.exports = {
     // 抛出词法分析，语法分析错误
@@ -75,7 +47,7 @@ module.exports = {
     // 判断是否是保留字，采用折半查找
     judReserve: function(s) {
         let l = 0, r = reserveWords.length - 1, mid
-        while(l < r) {
+        while(l <= r) {
             mid = (l + r) >> 1
             if(reserveWords[mid] == s)
                 return mid
@@ -86,4 +58,48 @@ module.exports = {
         }
         return -1
     },
+
+    // 判断到达接收态时是标识符还是保留字
+    judIdentifierOrReverse: function(s) {
+        if(this.judAllAlphabet(s)) {
+            let num = this.judReserve(s)
+            // 只有num不为-1时才是保留字，其余都是标识符，其种类码为81
+            if(num != -1)
+                return num
+            else
+                return 81
+        }
+        return 81
+    },
+
+    // 判断是否是小数中的点
+    judPoint: c => c == "." ? "." : false,
+
+    // 选择状态
+    stateSelect: c => {
+        switch (c) {
+            case "+":
+                return 6
+            case "-":
+                return 10
+            case "*":
+                return 15
+            case "/":
+                return 18
+            case "<":
+                return 21
+            case ">":
+                return 27
+            case "&":
+                return 33
+            case "|":
+                return 37
+            case "!":
+                return 41
+            case "^":
+                return 44
+            case "%":
+                return 47
+        }
+    }
 }
