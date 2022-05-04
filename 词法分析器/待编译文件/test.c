@@ -1,20 +1,20 @@
-typedef struct ArcNode {
+typedef struct ArcNode { // 邻接表的边存储结构
 	int adjvex;
 	int info;
 	struct ArcNode* nextArc;
 }ArcNode;
 
-typedef struct VNode {
+typedef struct VNode { // 邻接表的点存储结构
 	char data;
 	ArcNode* firstArc;
 }VNode;
 
-typedef struct AGraph {
+typedef struct AGraph { // 邻接表
 	int n, e;
 	VNode* vexlist;
 }AGraph;
 
-void DFS(const AGraph &G, int p, bool* vis) {
+void DFS(const AGraph &G, int p, bool* vis) { // 一个平平无奇DFS
 	printf("%d ", p);
 	for(ArcNode* i = G.vexlist[p].firstArc; i; i = i->nextArc)
 		if(!vis[i->adjvex]) {
@@ -23,7 +23,7 @@ void DFS(const AGraph &G, int p, bool* vis) {
 		}
 }
 
-void addEdge(AGraph &G, ArcNode** tail, int u, int v) {
+void addEdge(AGraph &G, ArcNode** tail, int u, int v) { // 邻接表加边函数
 	ArcNode* edge = (ArcNode*)malloc(sizeof(ArcNode));
 	edge->adjvex = v;
 	edge->nextArc = NULL;
@@ -34,11 +34,13 @@ void addEdge(AGraph &G, ArcNode** tail, int u, int v) {
 		tail[u] = edge;
 	}
 }
-
+/*
+没什么好些的***只是想测试下词法分析器功能***
+*/
 int main() {
 	int n, e;
 	scanf("%d %d", &n, &e);
-	
+
 	AGraph G;
 	G.n = n;
 	G.e = e;
@@ -49,14 +51,14 @@ int main() {
 		vis[i] = false;
 		G.vexlist[i].firstArc = NULL;
 	}
-	
+
 	for(int i = 0; i < e; i ++) {
 		int u, v;
 		scanf("%d %d", &u, &v);
 		addEdge(G, tail, u, v);
 	}
-	
-	for(int i = 0; i < n; i ++) 
+
+	for(int i = 0; i < n; i ++)
 		if(!vis[i])
 			DFS(G, i, vis);
 }

@@ -114,6 +114,17 @@ function back(tokenType) {
         beginPos = forwardPos
 }
 
+// 不带有尾指针后退的状态回退操作，专门针对不需要生成token的词素，例如注释
+function noTokenBack() {
+    // 回退到初始状态
+    state = 0
+    // 如果代码没有读完，那么令词素首指针和尾指针到达相同位置，开始新的词素识别
+    lex_begin = forward
+    // 如果两个指针不在同一个缓冲区内，那么把首指针放入尾指针所在缓冲区
+    if(beginPos != forwardPos)
+        beginPos = forwardPos
+}
+
 async function work() {
     // 初始化当前缓冲区nowBuffer内容，正在使用的缓冲区buffer内容，更新首尾指针当前所在缓冲区
     beginPos = forwardPos = nowBuffer = buffer = await read(file)
@@ -229,10 +240,14 @@ async function work() {
             case 17: // *
                 isFinished = retract(c, 46)
                 break
-            case 18: // /系列
+            case 18: // /系列(共4种可能 /和/=和行注释和多行注释)
                 c = await nextChar()
                 if(c == "=")
                     state = 19
+                else if(c == "/")
+                    state = 67
+                else if(c == "*")
+                    state = 69
                 else
                     state = 20
                 break
@@ -418,6 +433,33 @@ async function work() {
                 break
             case 66: // ?
                 back(54)
+                break
+            case 67: // 单行注释//
+                c = await nextChar()
+                if(c == "\n")
+                    state = 68
+                else if(c == "eof")
+                    isFinished = true
+                break
+            case 68: // 单行注释//接收状态
+                // 语法分析不需要接收注释，直接回退到初始状态即可，词素首指针跳过注释
+                noTokenBack()
+                break
+            case 69: // 多行注释/**/
+                c = await nextChar()
+                if(c == "*")
+                    state = 70
+                break
+            case 70: // 多行注释/**/
+                c = await nextChar()
+                if(c == "/")
+                    state = 71
+                else
+                    state = 69
+                break
+            case 71: // 多行注释/**/接收状态
+                // 语法分析不需要接收注释，直接回退到初始状态即可
+                noTokenBack()
                 break
         }
     }
