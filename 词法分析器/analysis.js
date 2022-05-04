@@ -69,10 +69,21 @@ function getToken(tokenType) {
     else
         // 首尾指针不在同一个缓冲区内，分开截取字符
         token.content = beginPos.slice(lex_begin).join("") + forwardPos.slice(0, forward).join("")
-    // console.log(`row: ${row}, col: ${col}, lex_begin: ${lex_begin}, forward: ${forward}, contentLength: ${token.content.length}`)
     // 记录当前词素的行列信息，方便错误提示
     token.row = row
     token.col = col - token.content.length + 1
+
+    // 如果是标识符或关键字，那么需要考虑是标识符还是关键字
+    if(tokenType == "identifier or key") {
+        if(utils.judAllAlphabet(token.content)) {
+            let num = utils.judReserve(token.content)
+            if(num != -1)
+                tokenType = "nums"
+        }
+        else
+            tokenType = "identifier"
+    }
+
     token.type = tokenType
     tokens.push(token)
 }
@@ -115,13 +126,15 @@ async function work() {
                 // 尾指针多读了一位，当读入非字母数字下划线时会进入状态2，此时尾指针是当前读入的非字母数字下划线的下一位，同时记录的列也要随之减1
                 forward -= 1
                 col -= 1
+
                 // 生成当前标识符对应的token
-                getToken("identifier")
+                getToken("identifier or key")
                 // 查看当前代码是否读完
                 if(c == "eof") {
                     isFinished = true
                     console.log(tokens)
                 }
+
                 // 如果代码没有读完，那么令词素首指针和尾指针到达相同位置，开始新的词素识别
                 lex_begin = forward
                 // 如果两个指针不在同一个缓冲区内，那么把首指针放入尾指针所在缓冲区
