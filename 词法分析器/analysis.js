@@ -461,6 +461,9 @@ async function work() {
                 // 语法分析不需要接收注释，直接回退到初始状态即可
                 noTokenBack()
                 break
+            default:
+                // 如果没有可选择状态，则说明出现了不在种别码表中的字符
+                return new Promise((res, rej) => rej(utils.throwAnalysisError(row, col, "词法错误", "出现未知字符")))
         }
     }
 }

@@ -8,7 +8,7 @@ let { init: testInit, work: testWork } = require("./词法分析器/词法分析
 ;(async () => {
     try {
         // 尝试打开待编译文件
-        let fd = await open("./待编译文件/test.c")
+        let fd = await open("./待编译文件/test.txt")
         // 初始化词法分析器模块
         init(fd, read)
         // 运行词法分析器模块并接收词素集

@@ -2,13 +2,13 @@ let { type, reserveWords } = require("./type.js")
 
 module.exports = {
     // 抛出词法分析，语法分析错误
-    throwAnalysisError: function(row, line, errorType, msg) {
-        console.log(`${errorType}！，该错误发生在第${row}行，第${line}列，${msg}`)
+    throwAnalysisError: function(row, col, errorType, msg) {
+        return `${errorType}！，该错误发生在第${row}行，第${col}列，${msg}`
     },
 
     // 抛出运行时错误
     throwError: function(errorType, msg) {
-        console.log(`${errorType}！，${msg}`)
+        return `${errorType}！，${msg}`
     },
 
     // 判断是否为字母
