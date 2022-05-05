@@ -36,7 +36,11 @@ void addEdge(AGraph &G, ArcNode** tail, int u, int v) { // 邻接表加边函数
 }
 /*
 没什么好些的***只是想测试下词法分析器功能***
+
+
 */
+
+
 int main() {
 	int n, e;
 	scanf("%d %d", &n, &e);
