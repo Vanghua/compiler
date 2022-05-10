@@ -170,13 +170,17 @@ async function work() {
             case 2: // 标识符或保留字
                 isFinished = retract(c, "identifier or reserve")
                 break
-            case 3: // 常数(共2种可能 小数和整数)
+            case 3: // 常数(共4种可能 小数和整数和16进制数和8进制数)
                 c = await nextChar()
                 if(!utils.judNumber(c))
                     if(utils.judPoint(c))
-                        state = 5
+                        state = 5 // 小数
+                    else if(utils.jud0x(c))
+                        state = 72 // 16进制数
+                    else if(utils.jud0b(c))
+                        state = 74 // 8进制数
                     else
-                        state = 4
+                        state = 4 // 整数
                 break
             case 4: // 常数
                 isFinished = retract(c, 80)
@@ -460,6 +464,22 @@ async function work() {
             case 71: // 多行注释/**/接收状态
                 // 语法分析不需要接收注释，直接回退到初始状态即可
                 noTokenBack()
+                break
+            case 72: // 16进制数
+                c = await nextChar()
+                if(!utils.jud0xNum(c))
+                    state = 73
+                break
+            case 73: // 16进制数接收状态
+                isFinished = retract(c, 80)
+                break
+            case 74: // 8进制数
+                c = await nextChar()
+                if(!utils.jud0bNum(c))
+                    state = 75
+                break
+            case 75: // 8进制数接收状态
+                isFinished = retract(c, 80)
                 break
             default:
                 // 如果没有可选择状态，则说明出现了不在种别码表中的字符

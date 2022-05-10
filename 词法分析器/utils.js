@@ -78,6 +78,28 @@ module.exports = {
     // 判断是否是小数中的点
     judPoint: c => c == "." ? "." : false,
 
+    // 判断是否是16进制数开头
+    jud0x: c => c == "x" || c == "X" ? c : false,
+
+    // 判断是否是16进制数
+    jud0xNum: function (c) {
+        let tmp = c.charCodeAt(0)
+        if(this.judNumber(c) || (tmp >= 65 && tmp <= 70))
+            return true
+        return false
+    },
+
+    // 判断是否是8进制数开头
+    jud0b: c => c == "b" || c == "B" ? c : false,
+
+    // 判断是否是8进制数
+    jud0bNum: function(c) {
+        let tmp = c.charCodeAt(0)
+        if(tmp >= 48 && tmp <= 55)
+            return true
+        return false
+    },
+
     // 选择状态
     stateSelect: c => {
         switch (c) {

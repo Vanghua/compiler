@@ -1,4 +1,10 @@
 { content: int, row: 1, col: 1, type: 16 }
-{ content: abc, row: 1, col: 5, type: 81 }
-{ content: ^, row: 1, col: 8, type: 57 }
-{ content: ;, row: 1, col: 9, type: 53 }
+{ content: 123, row: 1, col: 5, type: 80 }
+{ content: ab, row: 1, col: 8, type: 81 }
+{ content: =, row: 1, col: 11, type: 72 }
+{ content: 0XAB333, row: 1, col: 13, type: 80 }
+{ content: ;, row: 1, col: 20, type: 53 }
+{ content: 0b1777, row: 2, col: 1, type: 80 }
+{ content: 99, row: 2, col: 7, type: 80 }
+{ content: l, row: 2, col: 9, type: 81 }
+{ content: ;, row: 2, col: 10, type: 53 }

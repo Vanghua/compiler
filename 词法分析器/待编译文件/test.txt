@@ -1,1 +1,2 @@
-int abc^;
+int 123ab = 0XAB333;
+0b177799l;
