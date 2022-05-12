@@ -1,24 +1,3 @@
-let G = {
-    Vt: ["a", "d", "ε"],
-    Vs: ["A", "S"],
-    P: [["S", "aA"], ["S", "d"], ["A", "bAS"], ["A", "ε"]],
-    S: "S"
-}
-
-// let G = {
-//     Vt: ["a", "b", "ε"],
-//     Vs: ["S", "E", "B"],
-//     P: [["S", "E"], ["E", "BB"], ["B", "aB"], ["B", "b"]],
-//     S: "S"
-// }
-
-// let G = {
-//     Vt: ["d", "b", "ε"],
-//     Vs: ["S", "A", "C"],
-//     P: [["S", "A"], ["A", "C"], ["C", "Ab"], ["C", "d"]],
-//     S: "S"
-// }
-
 /* @params
 symbols表示待求的串
 result表示first集合结果
@@ -26,7 +5,7 @@ vis表示已求过first集的非终结符，用于避免左递归
 G表示文法
 */
 // 求某个串货非终结符的first集函数
-function first(symbols, result, vis, G) {
+function getFirst(symbols, result, vis, G) {
     // 遍历待求串
     let len = symbols.length
     for(let i = 0; i < len; i ++) {
@@ -40,7 +19,7 @@ function first(symbols, result, vis, G) {
             for(let p of G.P)
                 if(p[0] == s) {
                     vis[s] = true
-                    first(p[1], result, vis, G)
+                    getFirst(p[1], result, vis, G)
                     vis[s] = false
                 }
         }
@@ -100,5 +79,5 @@ function nullable(symbols, vis, G) {
 }
 
 module.exports = {
-    first
+    getFirst
 }

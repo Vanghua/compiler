@@ -13,7 +13,6 @@ class Token {
                     value = ""
                 }
                 if((p == "row" || p == "col") && typeof value != 'number') {
-                    console.log(typeof value)
                     throwError("类型错误", "token的row和line和type类型应为数值")
                     value = -1
                 }
