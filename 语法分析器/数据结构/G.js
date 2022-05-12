@@ -6,10 +6,12 @@ class G {
         this.Vs = Vs
         this.P = P
         this.S = S
+        // expand保存语法分析LR分析中的扩展文法中的项目产生式
+        this.expand = []
         return new Proxy(this, {
             set(target, p, value, receiver) {
-                if((p == "Vt" || "Vs" || "P") && !Array.isArray(value)) {
-                    throwError("类型错误", "文法的终结符，非终结符，产生式应该为数组类型")
+                if((p == "Vt" || "Vs" || "P" || "expand") && !Array.isArray(value)) {
+                    throwError("类型错误", "文法的终结符，非终结符，产生式，项目产生式应该为数组类型")
                     value = []
                 }
                 if(p == "S" && typeof value != 'string') {
