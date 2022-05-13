@@ -47,7 +47,7 @@ function getClosure(I, G) {
                     let leftExp = pp[0], rightExp = pp[1]
                     if(leftExp == nextChar && rightExp[0] == "·")
                         // 如果存在一个项目产生式，左侧是当前非终结符，且右侧第一个符号是项目符号。那么将其加入当前项目集，其向前搜索符上述代码已求解
-                        I.push([pp, forward])
+                        I.push([...pp, forward])
                 }
             }
         }
@@ -81,11 +81,14 @@ function judSameItem(ISet, I) {
 }
 
 // LR1分析中的项目集转换GO函数
-function go(I, ISet, G) {
+// cnt表示当前项目集的编号，从0开始编号
+function go(I, ISet, G, nodes) {
     for(let p of I) {
         let rightExp = p[1], pos = rightExp.indexOf("·"), len = rightExp.length
         if(pos == len - 1)
             continue
+        // char表示·后面的字符
+        let char = rightExp[pos + 1]
         // 声明由当前项目集转移到下一个项目集INext，以及项目集的初始项目产生式nextExp
         let INext = [],nextExp = [...rightExp]
         // 实现项目符号后移一个字符（现在下一个字符后面添加项目符号，之后删除原项目符号）
@@ -93,10 +96,15 @@ function go(I, ISet, G) {
         nextExp.splice(pos, 1)
         // 下一个项目集的初始项目产生式就是nextExp
         INext.push(nextExp)
-        // 判断该项目集是否存在
+        // 判断该项目集是否在总项目集中存在
         let isExist = judSameItem(ISet, INext)
-        if(!isExist)
-            ISet.push(getClosure(I, G))
+        // 不论该项目集是否在总项目集中存在，在DFA中都有一条I到INext的边
+        nodes[I.join("")].firstEdge.push(new Edges(char, INext, {}))
+        if(!isExist) {
+            INext = getClosure(INext, G)
+            ISet.push(INext)
+            go(INext, ISet, G, nodes)
+        }
     }
 }
 
@@ -115,11 +123,22 @@ function init(G) {
 
     // 初始化存储DFA的邻接表，并加入I0项目集顶点
     let nodes = []
-    nodes.push(new Nodes(I0, {}))
-}
+    // 邻接表顶点集数组下标为字符串，相当于成为了数组属性
+    nodes[I0.join("")] = new Nodes(I0, {})
 
-function LRAnalysis() {
-
+    // 开始求所有的项目集
+    go(I0, ISet, G, nodes)
 }
 
 let { getItem } = require("./getItem.js")
+;(function main() {
+    let G = {
+        Vt: ["a", "b"],
+        Vs: ["S", "B"],
+        P: [["S", ["B", "B"]], ["B", ["a", "B"]], ["B", ["b"]]],
+        expand: [],
+        S: "S"
+    }
+    G = getItem(G)
+    init(G)
+})();
