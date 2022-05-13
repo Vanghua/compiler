@@ -2,13 +2,14 @@ function getItem(G) {
     // 扩展文法
     G.S = "S'"
     G.Vs.push("S'")
-    G.P.push(["S'", "S"])
+    G.P.push(["S'", ["S"]])
     for(let p of G.P) {
         let len = p[1].length
         for(let i = 0; i <= len; i ++) {
-            let s = p[1].split("")
-            s.splice(i, 0, "·")
-            G.expand.push([p[0], s.join("")])
+            // 在项目产生式生成时，为了不影响原产生式，不能直接在原产生式上操作，需要先进行浅拷贝
+            let rightExp = [...p[1]]
+            rightExp.splice(i, 0, "·")
+            G.expand.push([p[0], rightExp])
         }
     }
     return G

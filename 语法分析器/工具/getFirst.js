@@ -1,5 +1,5 @@
 /* @params
-symbols表示待求的串
+symbols表示待求的串，是一个数组
 result表示first集合结果
 vis表示已求过first集的非终结符，用于避免左递归
 G表示文法

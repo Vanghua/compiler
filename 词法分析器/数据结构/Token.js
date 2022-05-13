@@ -23,6 +23,9 @@ class Token {
     toString() {
         return `{ content: ${this.content}, row: ${this.row}, col: ${this.col}, type: ${this.type} }`
     }
+    get [Symbol.toStringTag]() {
+        return "Token"
+    }
 }
 
 module.exports.Token = Token
