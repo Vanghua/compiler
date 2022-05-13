@@ -1,4 +1,4 @@
-const { throwError } = require("../utils.js");
+const { throwError } = require("../LR1.js");
 
 class G {
     constructor(Vt, Vs, P, S) {
