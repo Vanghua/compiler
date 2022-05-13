@@ -3,7 +3,9 @@ class Edges {
     constructor(val, item, next) {
         this.val = val ?? ""
         this.item = item ?? {}
-        this.next = next ?? {}
+        // 状态对应的数值，item是状态集，itemNum表示该状态集对应action表中的状态值
+        this.itemNum = -1
+        this.next = next ?? []
         return new Proxy(this, {
             set(target, p, value, receiver) {
                 if(p == "val" && typeof value != 'string') {
@@ -28,7 +30,9 @@ class Edges {
 class Nodes {
     constructor(item, firstEdge) {
         this.item = item ?? []
-        this.firstEdge = firstEdge ?? {}
+        this.firstEdge = firstEdge ?? new Set()
+        // 状态对应的数值，item是状态集，itemNum表示该状态集对应action表中的状态值
+        this.itemNum = -1
         return new Proxy(this, {
             set(target, p, value, receiver) {
                 if(p == "item" && !Array.isArray(p)) {

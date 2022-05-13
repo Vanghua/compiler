@@ -1,8 +1,8 @@
 function getItem(G) {
     // 扩展文法
-    G.S = "S'"
     G.Vs.push("S'")
-    G.P.push(["S'", ["S"]])
+    G.P.push(["S'", [G.S]])
+    G.S = "S'"
     for(let p of G.P) {
         let len = p[1].length
         for(let i = 0; i <= len; i ++) {
