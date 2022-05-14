@@ -10,54 +10,48 @@ function test(input, action, goto, G) {
     // 初始化状态栈和符号栈
     stateStack.push(0)
     charStack.push("#")
+    // charPos表示已读取的输入串字符的位置，step表示语法分析第几步
+    let charPos = 0, step = 0
 
-    let len = input.length
-    for(let i = 0; i < len;) {
-        // 获取当前状态和当前输入符号
-        let state = getTop(stateStack), char = input[i]
-
-        if(char == "#") {
-            // 当输入结束但符号栈和状态栈不为空时，根据当前符号栈栈顶元素，去action表和goto表中寻找指示
-            char = getTop(charStack)
-            let gotoPos = G.Vs.indexOf(char)
-            if(gotoPos != -1)
-                // 如果是非终结符那么去goto表找
-                stateStack.push(goto[state + 1][gotoPos])
-            // 如果是终结符按照下述操作即可
-        }
-
-        let pos = action[0].indexOf(char)
-        if(pos == -1) {
-            // 错误处理
+    LR: while(true) {
+        let char = input[charPos]
+        // 如果当前指针所指输入串位置的符号不为终结符#，那么令当前符号和当前栈顶状态进行分析
+        let state = getTop(stateStack)
+        let col = action[0].indexOf(char), act = action[state + 1][col]
+        if(!act) {
             console.log("语法分析出错")
-            return
-        }
-
-        // 获取action表中指定动作
-        let act = action[state + 1][pos]
-        if(act[0] == "S") {
-            // 移进动作
-            let nextState = act[1]
-            stateStack.push(parseInt(nextState))
+            break LR
+        } else if(act[0] == "S") {
+            // 打印语法分析步骤
+            console.log(`(${++step})\t${stateStack.join("")}\t${charStack.join("")}\t${input.slice(charPos).join("")}\t${act}\t`)
+            // 进行移进
+            // 注意act.slice(1)表示移进的状态，不能用act[1]表示，因为状态可能不是个位数
+            let nextState = parseInt(act.slice(1))
+            stateStack.push(nextState)
             charStack.push(char)
-            i ++
+            charPos ++
         } else if(act == "acc") {
-            // 语法分析结束动作
+            // 打印语法分析步骤
+            console.log(`(${++step})\t${stateStack.join("")}\t${charStack.join("")}\t${input.slice(charPos).join("")}\t${act}\t`)
             console.log("语法分析完成")
+            break LR
         } else {
-            // 规约动作
-            let expIndex = act[1]
-            // 使用exp产生式进行规约，rightExpLen表示产生式右侧符号个数，vs表示产生式左侧的非终结符
-            let exp = G.P[expIndex], rightExpLen = exp[1].length, vs = exp[0]
-            // 规约时先弹出符号栈和状态栈中指定个数的内容
-            for(let i = 0; i < rightExpLen; i ++) {
+            // 打印语法分析步骤
+            let outputPart = `(${++step})\t${stateStack.join("")}\t${charStack.join("")}\t${input.slice(charPos).join("")}\t${act}\t`
+            // 进行规约
+            let expIndex = parseInt(act.slice(1))
+            let exp = G.P[expIndex], leftExp = exp[0], rightExp = exp[1], len = rightExp.length
+            // 符号栈和状态栈弹出状态进行规约
+            for(let i = 0; i < len; i ++) {
                 stateStack.pop()
                 charStack.pop()
             }
-            // 符号栈压入规约的非终结符
-            charStack.push(vs)
-            // 状态栈压入在当前栈顶状态下面临当前非终结符时goto表指定的状态
-            let state = getTop(stateStack), nextState = goto[state + 1][goto[0].indexOf(vs)]
+            // 符号规约结果入栈
+            charStack.push(leftExp)
+            // 状态规约结果需要到goto表中寻找
+            let state = getTop(stateStack), nextState = goto[state + 1][goto[0].indexOf(leftExp)]
+            // 打印语法分析步骤
+            console.log(outputPart + nextState)
             stateStack.push(nextState)
         }
     }
@@ -73,7 +67,10 @@ function work() {
     }
     let { action, goto } = LR1(G)
     console.log(action, goto)
-    let input = "abb#"
+    let input = ["a", "b", "b", "#"]
+
+    console.log("步骤\t", "状态栈\t", "符号栈\t", "输入串\t", "Action\t", "GOTO\t")
+
     test(input, action, goto, G)
 }
 
