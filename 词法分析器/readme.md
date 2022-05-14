@@ -25,9 +25,9 @@
 
 
 
-### 2.待编译文件夹中 test.c 和 test.txt
+### 2.待编译文件夹中 analysis.c 和 analysis.txt
 
-待编译文件夹中放置了两种类型的待编译文件，test.txt是用于某几种词素的测法分析测试，test.c是用于C语言文件的词法分析测试。
+待编译文件夹中放置了两种类型的待编译文件，analysis.txt是用于某几种词素的测法分析测试，analysis.c是用于C语言文件的词法分析测试。
 
 
 
@@ -44,7 +44,7 @@ read.js模块提供了文件读能力。
   ```javascript
   let { open, read } = require("./read.js")
   
-  open("test.c")
+  open("analysis.c")
       .then(fd => read(fd))
       .then(cString => {
       	console.log(cString)
@@ -65,7 +65,7 @@ write.js模块提供了文件写能力。
   let { init, work } = require("./write.js")
   let { open } = require("./read.js")
   
-  open("./test.c")
+  open("./analysis.c")
       .then(fd => init(fd))
       .then(() => work())
   ```
@@ -89,7 +89,7 @@ type.js提供了本项目规定的C语言种别码以及按字典序排序的C�
 
   
 
-### 6.LR1.js
+### 6.getTable.js
 
 utils.js提供了本项目中词法分析部分的常用工具函数，为了让词法分析部分代码更加清晰，因此将一些函数抽离出来封装到工具模块中。
 
@@ -124,7 +124,7 @@ analysis.js提供了词法分析器功能
   let { open, read } = require("./read.js")
   let { init, work } = require("./analysis.js")
   
-  open("./test.c")
+  open("./analysis.c")
       .then(fd => init(fd, read)) // 词法分析器模块初始化
       .then(() => work()) // 调用词法分析功能
       .then(() => console.log("词法分析成功"))

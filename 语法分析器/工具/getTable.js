@@ -295,8 +295,8 @@ function getTable(ISet, nodes, G) {
     return { action, goto }
 }
 
-// 进行LR1分析
-function LR1(G) {
+// 计算action表和goto表函数
+function LR1Table(G) {
     // 将原始文法转换为扩展文法
     G = getItem(G)
     let len = G.expand.length
@@ -323,4 +323,4 @@ function LR1(G) {
     return getTable(ISet, nodes, G)
 }
 
-module.exports.LR1 = LR1
+module.exports.LR1Table = LR1Table

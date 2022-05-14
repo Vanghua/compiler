@@ -19,7 +19,6 @@ let { init: testInit, work: testWork } = require("./词法分析器/词法分析
         await testWork()
         console.log("词法分析成功")
 
-        
     } catch(err) {
         console.log(err)
     }

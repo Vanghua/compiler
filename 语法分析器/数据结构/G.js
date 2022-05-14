@@ -1,4 +1,4 @@
-const { throwError } = require("../LR1.js");
+const { throwError } = require("../getTable.js");
 
 class G {
     constructor(Vt, Vs, P, S) {

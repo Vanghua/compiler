@@ -1,0 +1,23 @@
+	+	*	(	)	i	#
+0			S6		S19	
+1	S2					acc
+2			S6		S19	
+3	r0	S4				r0
+4			S6		S19	
+5	r2	r2				r2
+6			S13		S18	
+7	S9			S8		acc
+8	r4	r4				r4
+9			S13		S18	
+10	r0	S11		r0		
+11			S13		S18	
+12	r2	r2		r2		
+13			S13		S18	
+14	S9			S15		acc
+15	r4	r4		r4		
+16	r1	S11		r1		
+17	r3	r3		r3		
+18	r5	r5		r5		
+19	r5	r5				r5
+20	r3	r3				r3
+21	r1	S4				r1
