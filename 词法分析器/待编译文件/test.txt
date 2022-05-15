@@ -1,1 +1,5 @@
-int a, b = 2, c = a;
+int a = 1, b, c ,e = 12 ,f, g = 33;
+double ss =3.14;
+float m = 1.222;
+int mm = 12;
+double c = 3.1415926;

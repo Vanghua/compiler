@@ -1,26 +1,94 @@
 步骤	状态栈	符号栈	输入串	Action	GOTO	
-(1)	0	#	int identifier = constant , identifier = constant , identifier = identifier ; #	S25	
-(2)	025	#int	identifier = constant , identifier = constant , identifier = identifier ; #	r6	7
-(3)	07	#primaryType	identifier = constant , identifier = constant , identifier = identifier ; #	S10	
-(4)	0710	#primaryTypeidentifier	= constant , identifier = constant , identifier = identifier ; #	S14	
-(5)	071014	#primaryTypeidentifier=	constant , identifier = constant , identifier = identifier ; #	S16	
-(6)	07101416	#primaryTypeidentifier=constant	, identifier = constant , identifier = identifier ; #	r17	20
-(7)	0720	#primaryTypeassignment_type	, identifier = constant , identifier = identifier ; #	S21	
-(8)	072021	#primaryTypeassignment_type,	identifier = constant , identifier = identifier ; #	S23	
-(9)	07202123	#primaryTypeassignment_type,identifier	= constant , identifier = identifier ; #	S14	
-(10)	0720212314	#primaryTypeassignment_type,identifier=	constant , identifier = identifier ; #	S16	
-(11)	072021231416	#primaryTypeassignment_type,identifier=constant	, identifier = identifier ; #	r17	20
-(12)	07202120	#primaryTypeassignment_type,assignment_type	, identifier = identifier ; #	S21	
-(13)	0720212021	#primaryTypeassignment_type,assignment_type,	identifier = identifier ; #	S23	
-(14)	072021202123	#primaryTypeassignment_type,assignment_type,identifier	= identifier ; #	S14	
-(15)	07202120212314	#primaryTypeassignment_type,assignment_type,identifier=	identifier ; #	S15	
-(16)	0720212021231415	#primaryTypeassignment_type,assignment_type,identifier=identifier	; #	r16	20
-(17)	072021202120	#primaryTypeassignment_type,assignment_type,assignment_type	; #	r20	22
-(18)	072021202122	#primaryTypeassignment_type,assignment_type,assignment_list	; #	r21	22
-(19)	07202122	#primaryTypeassignment_type,assignment_list	; #	r21	19
-(20)	0719	#primaryTypeassignment_list	; #	r15	9
-(21)	079	#primaryTypeassignment	; #	r14	5
-(22)	05	#declaration	; #	r2	2
-(23)	02	#allTypeStatement	; #	S3	
-(24)	023	#allTypeStatement;	#	r0	1
-(25)	01	#statement	#	acc	
+(1)	0	#	int identifier = constant , identifier , identifier , identifier = constant , identifier , identifier = constant ; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S63	
+(2)	063	#int	identifier = constant , identifier , identifier , identifier = constant , identifier , identifier = constant ; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	r6	16
+(3)	016	#primaryType	identifier = constant , identifier , identifier , identifier = constant , identifier , identifier = constant ; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S20	
+(4)	01620	#primaryTypeidentifier	= constant , identifier , identifier , identifier = constant , identifier , identifier = constant ; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S44	
+(5)	0162044	#primaryTypeidentifier=	constant , identifier , identifier , identifier = constant , identifier , identifier = constant ; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S46	
+(6)	016204446	#primaryTypeidentifier=constant	, identifier , identifier , identifier = constant , identifier , identifier = constant ; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	r27	57
+(7)	01657	#primaryTypeassignment_type	, identifier , identifier , identifier = constant , identifier , identifier = constant ; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S58	
+(8)	0165758	#primaryTypeassignment_type,	identifier , identifier , identifier = constant , identifier , identifier = constant ; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S30	
+(9)	016575830	#primaryTypeassignment_type,identifier	, identifier , identifier = constant , identifier , identifier = constant ; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S31	
+(10)	01657583031	#primaryTypeassignment_type,identifier,	identifier , identifier = constant , identifier , identifier = constant ; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S33	
+(11)	0165758303133	#primaryTypeassignment_type,identifier,identifier	, identifier = constant , identifier , identifier = constant ; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S34	
+(12)	016575830313334	#primaryTypeassignment_type,identifier,identifier,	identifier = constant , identifier , identifier = constant ; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S36	
+(13)	01657583031333436	#primaryTypeassignment_type,identifier,identifier,identifier	= constant , identifier , identifier = constant ; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S37	
+(14)	0165758303133343637	#primaryTypeassignment_type,identifier,identifier,identifier=	constant , identifier , identifier = constant ; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S39	
+(15)	016575830313334363739	#primaryTypeassignment_type,identifier,identifier,identifier=constant	, identifier , identifier = constant ; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	r27	23
+(16)	01657583031333423	#primaryTypeassignment_type,identifier,identifier,assignment_type	, identifier , identifier = constant ; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S24	
+(17)	0165758303133342324	#primaryTypeassignment_type,identifier,identifier,assignment_type,	identifier , identifier = constant ; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S33	
+(18)	016575830313334232433	#primaryTypeassignment_type,identifier,identifier,assignment_type,identifier	, identifier = constant ; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S34	
+(19)	01657583031333423243334	#primaryTypeassignment_type,identifier,identifier,assignment_type,identifier,	identifier = constant ; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S36	
+(20)	0165758303133342324333436	#primaryTypeassignment_type,identifier,identifier,assignment_type,identifier,identifier	= constant ; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S37	
+(21)	016575830313334232433343637	#primaryTypeassignment_type,identifier,identifier,assignment_type,identifier,identifier=	constant ; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S39	
+(22)	01657583031333423243334363739	#primaryTypeassignment_type,identifier,identifier,assignment_type,identifier,identifier=constant	; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	r27	23
+(23)	0165758303133342324333423	#primaryTypeassignment_type,identifier,identifier,assignment_type,identifier,assignment_type	; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	r20	25
+(24)	016575830313334232425	#primaryTypeassignment_type,identifier,identifier,assignment_type,crossDeclaration_type	; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	r21	32
+(25)	0165758303132	#primaryTypeassignment_type,identifier,crossDeclaration_type	; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	r19	19
+(26)	01619	#primaryTypecrossDeclaration_type	; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	r15	14
+(27)	014	#crossDeclaration	; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	r24	10
+(28)	010	#declaration	; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	r2	7
+(29)	07	#allTypeStatement	; double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S8	
+(30)	078	#allTypeStatement;	double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	r0	4
+(31)	04	#statement	double identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S68	
+(32)	0468	#statementdouble	identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	r11	16
+(33)	0416	#statementprimaryType	identifier = constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S20	
+(34)	041620	#statementprimaryTypeidentifier	= constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S44	
+(35)	04162044	#statementprimaryTypeidentifier=	constant ; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S46	
+(36)	0416204446	#statementprimaryTypeidentifier=constant	; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	r27	57
+(37)	041657	#statementprimaryTypeassignment_type	; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	r30	56
+(38)	041656	#statementprimaryTypeassignment_list	; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	r25	18
+(39)	041618	#statementprimaryTypeassignment	; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	r17	19
+(40)	041619	#statementprimaryTypecrossDeclaration_type	; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	r15	14
+(41)	0414	#statementcrossDeclaration	; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	r24	10
+(42)	0410	#statementdeclaration	; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	r2	7
+(43)	047	#statementallTypeStatement	; float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S8	
+(44)	0478	#statementallTypeStatement;	float identifier = constant ; int identifier = constant ; double identifier = constant ; #	r0	6
+(45)	046	#statementstatement	float identifier = constant ; int identifier = constant ; double identifier = constant ; #	S67	
+(46)	04667	#statementstatementfloat	identifier = constant ; int identifier = constant ; double identifier = constant ; #	r10	16
+(47)	04616	#statementstatementprimaryType	identifier = constant ; int identifier = constant ; double identifier = constant ; #	S20	
+(48)	0461620	#statementstatementprimaryTypeidentifier	= constant ; int identifier = constant ; double identifier = constant ; #	S44	
+(49)	046162044	#statementstatementprimaryTypeidentifier=	constant ; int identifier = constant ; double identifier = constant ; #	S46	
+(50)	04616204446	#statementstatementprimaryTypeidentifier=constant	; int identifier = constant ; double identifier = constant ; #	r27	57
+(51)	0461657	#statementstatementprimaryTypeassignment_type	; int identifier = constant ; double identifier = constant ; #	r30	56
+(52)	0461656	#statementstatementprimaryTypeassignment_list	; int identifier = constant ; double identifier = constant ; #	r25	18
+(53)	0461618	#statementstatementprimaryTypeassignment	; int identifier = constant ; double identifier = constant ; #	r17	19
+(54)	0461619	#statementstatementprimaryTypecrossDeclaration_type	; int identifier = constant ; double identifier = constant ; #	r15	14
+(55)	04614	#statementstatementcrossDeclaration	; int identifier = constant ; double identifier = constant ; #	r24	10
+(56)	04610	#statementstatementdeclaration	; int identifier = constant ; double identifier = constant ; #	r2	7
+(57)	0467	#statementstatementallTypeStatement	; int identifier = constant ; double identifier = constant ; #	S8	
+(58)	04678	#statementstatementallTypeStatement;	int identifier = constant ; double identifier = constant ; #	r0	6
+(59)	0466	#statementstatementstatement	int identifier = constant ; double identifier = constant ; #	S63	
+(60)	046663	#statementstatementstatementint	identifier = constant ; double identifier = constant ; #	r6	16
+(61)	046616	#statementstatementstatementprimaryType	identifier = constant ; double identifier = constant ; #	S20	
+(62)	04661620	#statementstatementstatementprimaryTypeidentifier	= constant ; double identifier = constant ; #	S44	
+(63)	0466162044	#statementstatementstatementprimaryTypeidentifier=	constant ; double identifier = constant ; #	S46	
+(64)	046616204446	#statementstatementstatementprimaryTypeidentifier=constant	; double identifier = constant ; #	r27	57
+(65)	04661657	#statementstatementstatementprimaryTypeassignment_type	; double identifier = constant ; #	r30	56
+(66)	04661656	#statementstatementstatementprimaryTypeassignment_list	; double identifier = constant ; #	r25	18
+(67)	04661618	#statementstatementstatementprimaryTypeassignment	; double identifier = constant ; #	r17	19
+(68)	04661619	#statementstatementstatementprimaryTypecrossDeclaration_type	; double identifier = constant ; #	r15	14
+(69)	046614	#statementstatementstatementcrossDeclaration	; double identifier = constant ; #	r24	10
+(70)	046610	#statementstatementstatementdeclaration	; double identifier = constant ; #	r2	7
+(71)	04667	#statementstatementstatementallTypeStatement	; double identifier = constant ; #	S8	
+(72)	046678	#statementstatementstatementallTypeStatement;	double identifier = constant ; #	r0	6
+(73)	04666	#statementstatementstatementstatement	double identifier = constant ; #	S68	
+(74)	0466668	#statementstatementstatementstatementdouble	identifier = constant ; #	r11	16
+(75)	0466616	#statementstatementstatementstatementprimaryType	identifier = constant ; #	S20	
+(76)	046661620	#statementstatementstatementstatementprimaryTypeidentifier	= constant ; #	S44	
+(77)	04666162044	#statementstatementstatementstatementprimaryTypeidentifier=	constant ; #	S46	
+(78)	0466616204446	#statementstatementstatementstatementprimaryTypeidentifier=constant	; #	r27	57
+(79)	046661657	#statementstatementstatementstatementprimaryTypeassignment_type	; #	r30	56
+(80)	046661656	#statementstatementstatementstatementprimaryTypeassignment_list	; #	r25	18
+(81)	046661618	#statementstatementstatementstatementprimaryTypeassignment	; #	r17	19
+(82)	046661619	#statementstatementstatementstatementprimaryTypecrossDeclaration_type	; #	r15	14
+(83)	0466614	#statementstatementstatementstatementcrossDeclaration	; #	r24	10
+(84)	0466610	#statementstatementstatementstatementdeclaration	; #	r2	7
+(85)	046667	#statementstatementstatementstatementallTypeStatement	; #	S8	
+(86)	0466678	#statementstatementstatementstatementallTypeStatement;	#	r0	6
+(87)	046666	#statementstatementstatementstatementstatement	#	r38	5
+(88)	046665	#statementstatementstatementstatementmultiStatement	#	r39	5
+(89)	04665	#statementstatementstatementmultiStatement	#	r39	5
+(90)	0465	#statementstatementmultiStatement	#	r39	5
+(91)	045	#statementmultiStatement	#	r39	3
+(92)	03	#multiStatement	#	r41	1
+(93)	01	#program	#	acc	
