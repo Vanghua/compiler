@@ -68,7 +68,7 @@ module.exports = {
             let num = this.judReserve(s)
             // 只有num不为-1时才是保留字，其余都是标识符，其种类码为81
             if(num != -1)
-                return num
+                return num + 1
             else
                 return 81
         }

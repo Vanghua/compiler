@@ -9,7 +9,7 @@ function open(fileName) {
     return new Promise((res, rej) => {
         fs.open(fileName, "r", function(err, fd) {
             if(err)
-                rej(void 0)
+                rej(err)
             res(fd)
         })
     })
@@ -36,6 +36,11 @@ function read(fd) {
     })
 }
 
+// 重置函数，当需要重新读取文件时应该重置缓冲区位移标志position
+function reset() {
+    position = 0
+}
+
 module.exports = {
-    open, read
+    open, read, reset
 }

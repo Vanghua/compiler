@@ -1,23 +1,32 @@
-	+	*	(	)	i	#
-0			S6		S19	
-1	S2					acc
-2			S6		S19	
-3	r0	S4				r0
-4			S6		S19	
-5	r2	r2				r2
-6			S13		S18	
-7	S9			S8		acc
-8	r4	r4				r4
-9			S13		S18	
-10	r0	S11		r0		
-11			S13		S18	
-12	r2	r2		r2		
-13			S13		S18	
-14	S9			S15		acc
-15	r4	r4		r4		
-16	r1	S11		r1		
-17	r3	r3		r3		
-18	r5	r5		r5		
-19	r5	r5				r5
-20	r3	r3				r3
-21	r1	S4				r1
+	auto	break	case	char	const	continue	default	do	double	else	enum	extern	float	for	goto	if	int	long	register	return	short	signed	sizeof	static	struct	switch	typedef	union	unsigned	void	volatile	while	-	--	-=	->	!	!=	%	%=	&	&&	&=	(	)	*	*=	,	.	/	/=	:	;	?	[	]	^	^=	{	}	|	||	|=	~	+	++	+=	<	<<	<<=	<=	=	==	>	>=	>>	>>=	"	constant	identifier	'	character	string	#
+0				S24					S30				S29				S25	S26			S27								S28																																																			S23				
+1																																																																																				acc
+2																																																					S3																															
+3																																																																																				r0
+4																																																					r1																															
+5																																																					r2																															
+6																																																					r3																															
+7																																																																																S10				
+8																																																					r4																															
+9																																																					r14																															
+10																																																S11					r12																			S14												
+11																																																																																S13				
+12																																																					r13																															
+13																																																S11					r12																															
+14																																																																															S16	S15		S17	S18	
+15																																																r16					r16																															
+16																																																r17					r17																															
+17																																																r18					r18																															
+18																																																r19					r19																															
+19																																																					r15																															
+20																																																S21					r20																															
+21																																																																																S23				
+22																																																					r21																															
+23																																																																								S14												
+24																																																r5					r5																			r5								r5				
+25																																																r6					r6																			r6								r6				
+26																																																r7					r7																			r7								r7				
+27																																																r8					r8																			r8								r8				
+28																																																r9					r9																			r9								r9				
+29																																																r10					r10																			r10								r10				
+30																																																r11					r11																			r11								r11				

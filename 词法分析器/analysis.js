@@ -1,11 +1,3 @@
-// file为文件标识符，read为读取文件的函数，这些变量由初始化函数赋初值
-let file, read
-// CommonJS模块规范旨在模块间隔离，模块间传递参数可以让模块提供一个初始化函数，把外部变量传递进来
-function init(fd, rd) {
-    file = fd
-    read = rd
-}
-
 let utils = require("./utils.js")
 let { Token } = require("./数据结构/Token.js")
 
@@ -21,6 +13,19 @@ let beginPos, forwardPos
 let tokens = []
 // 记录当前代码的行和列，初始时没有读入字符，列为0，行为1，当读入字符时列加1
 let row = 1, col = 0
+
+// file为文件标识符，read为读取文件的函数，这些变量由初始化函数赋初值
+let file, read
+// CommonJS模块规范旨在模块间隔离，模块间传递参数可以让模块提供一个初始化函数，把外部变量传递进来
+function init(fd, rd) {
+    file = fd
+    read = rd
+    lex_begin = 0, forward = 0, state = 0;
+    row = 1, col = 0;
+    buffer = "", reserveBuffer = "";
+    nowBuffer = "";
+    tokens = [];
+}
 
 // 当词素被缓冲区截断时需要将后续内容读入另一个缓冲区
 async function reRead() {
@@ -429,11 +434,14 @@ async function work() {
             case 63: // ~
                 back(64)
                 break
-            case 64: // "
-                back(78)
+            case 64: // "字符串
+                c = await nextChar()
+                if(c == '"')
+                    state = 76
                 break
-            case 65: // '
-                back(82)
+            case 65: // '字符
+                c = await nextChar()
+                state = 77
                 break
             case 66: // ?
                 back(54)
@@ -481,6 +489,15 @@ async function work() {
             case 75: // 8进制数接收状态
                 isFinished = retract(c, 80)
                 break
+            case 76: // 字符串接收
+                back(84)
+                break
+            case 77: // 字符接收
+                c = await nextChar()
+                if(c == '"')
+                    back(83)
+                else
+                    return new Promise((res, rej) => rej(utils.throwAnalysisError(row, col, "词法错误", "''只能表示单个字符")))
             default:
                 // 如果没有可选择状态，则说明出现了不在种别码表中的字符
                 return new Promise((res, rej) => rej(utils.throwAnalysisError(row, col, "词法错误", "出现未知字符")))

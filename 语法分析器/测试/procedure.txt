@@ -1,15 +1,26 @@
 步骤	状态栈	符号栈	输入串	Action	GOTO	
-(1)	0	#	i+i*i#	S19	
-(2)	019	#i	+i*i#	r5	20
-(3)	020	#F	+i*i#	r3	21
-(4)	021	#T	+i*i#	r1	1
-(5)	01	#E	+i*i#	S2	
-(6)	012	#E+	i*i#	S19	
-(7)	01219	#E+i	*i#	r5	20
-(8)	01220	#E+F	*i#	r3	3
-(9)	0123	#E+T	*i#	S4	
-(10)	01234	#E+T*	i#	S19	
-(11)	0123419	#E+T*i	#	r5	5
-(12)	012345	#E+T*F	#	r2	3
-(13)	0123	#E+T	#	r0	1
-(14)	01	#E	#	acc	
+(1)	0	#	int identifier = constant , identifier = constant , identifier = identifier ; #	S25	
+(2)	025	#int	identifier = constant , identifier = constant , identifier = identifier ; #	r6	7
+(3)	07	#primaryType	identifier = constant , identifier = constant , identifier = identifier ; #	S10	
+(4)	0710	#primaryTypeidentifier	= constant , identifier = constant , identifier = identifier ; #	S14	
+(5)	071014	#primaryTypeidentifier=	constant , identifier = constant , identifier = identifier ; #	S16	
+(6)	07101416	#primaryTypeidentifier=constant	, identifier = constant , identifier = identifier ; #	r17	20
+(7)	0720	#primaryTypeassignment_type	, identifier = constant , identifier = identifier ; #	S21	
+(8)	072021	#primaryTypeassignment_type,	identifier = constant , identifier = identifier ; #	S23	
+(9)	07202123	#primaryTypeassignment_type,identifier	= constant , identifier = identifier ; #	S14	
+(10)	0720212314	#primaryTypeassignment_type,identifier=	constant , identifier = identifier ; #	S16	
+(11)	072021231416	#primaryTypeassignment_type,identifier=constant	, identifier = identifier ; #	r17	20
+(12)	07202120	#primaryTypeassignment_type,assignment_type	, identifier = identifier ; #	S21	
+(13)	0720212021	#primaryTypeassignment_type,assignment_type,	identifier = identifier ; #	S23	
+(14)	072021202123	#primaryTypeassignment_type,assignment_type,identifier	= identifier ; #	S14	
+(15)	07202120212314	#primaryTypeassignment_type,assignment_type,identifier=	identifier ; #	S15	
+(16)	0720212021231415	#primaryTypeassignment_type,assignment_type,identifier=identifier	; #	r16	20
+(17)	072021202120	#primaryTypeassignment_type,assignment_type,assignment_type	; #	r20	22
+(18)	072021202122	#primaryTypeassignment_type,assignment_type,assignment_list	; #	r21	22
+(19)	07202122	#primaryTypeassignment_type,assignment_list	; #	r21	19
+(20)	0719	#primaryTypeassignment_list	; #	r15	9
+(21)	079	#primaryTypeassignment	; #	r14	5
+(22)	05	#declaration	; #	r2	2
+(23)	02	#allTypeStatement	; #	S3	
+(24)	023	#allTypeStatement;	#	r0	1
+(25)	01	#statement	#	acc	

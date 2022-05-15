@@ -1,23 +1,32 @@
-	E	T	F
-0	1	21	20
-1			
-2		3	20
-3			
-4			5
-5			
-6	7	16	17
-7			
-8			
-9		10	17
-10			
-11			12
-12			
-13	14	16	17
-14			
-15			
-16			
-17			
-18			
-19			
-20			
-21			
+	statement	allTypeStatement	declaration	primaryType	identifier_list	assignment	assignment_list	assignment_type	onlyIfChoice	ifElseIfChoice	ifElseChoice	block	multiStatement
+0	1	2	5	7		6	19	20					
+1													
+2													
+3													
+4													
+5													
+6													
+7					8	9	19	20					
+8													
+9													
+10													
+11					12								
+12													
+13													
+14													
+15													
+16													
+17													
+18													
+19													
+20													
+21							22	20					
+22													
+23													
+24													
+25													
+26													
+27													
+28													
+29													
+30													

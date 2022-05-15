@@ -1,2 +1,1 @@
-int 123ab = 0XAB333;
-0b177799l;
+int a, b = 2, c = a;
