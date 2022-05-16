@@ -1,6 +1,6 @@
 /* @params
 symbols表示待求的串，是一个数组
-result表示first集合结果
+result表示first集合结果，注意result必须是一个集合
 vis表示已求过first集的非终结符，用于避免左递归
 G表示文法
 */
@@ -13,7 +13,7 @@ function getFirst(symbols, result, vis, G) {
         let s = symbols[i], isVt = G.Vt.indexOf(s) == -1 ? false : true
         if(isVt)
             // 如果是终结符，则可说明其一定属于该串的first集（当然并非该串的所有终结符都会被加入，下面有提前退出条件）
-            result.push(s)
+            result.add(s)
         else if(!isVt && !vis[s]) {
             // 如果是非终结符且没有被求过first集，则计算first集。求过first集的不再重复计算，避免循环左递归
             for(let p of G.P)
@@ -26,19 +26,18 @@ function getFirst(symbols, result, vis, G) {
         // 从result中弹出空串，用"\0"表示空串
         // 这表示只有在当前字符是当前串的最后一个字符且能推导出空串时，空串才属于first集合。如果串中某一个非终结符不是最后一个字符，且能推出空串，那么空串不属于first集
         if(result[result.length - 1] == "\0")
-            result.pop()
+            result.delete("\0")
         // isNull表示是否能够推导出空串
-        let isNull = nullable(s, [], G)
+        let isNull = nullable([s], [], G)
         if(!isNull)
             // 如果当前字符不能推导出空串，那么该串的first集已求出，即为result
             // 当前字符可能是终结符，也可能是不能多步推导出空串的非终结符
             break
         else if(isNull && i == len - 1)
             // 只有在当前字符是当前串的最后一个字符且能推导出空串时，空串才属于first集合
-            result.push("\0")
+            result.add("\0")
     }
 }
-
 /* @params
 symbols表示待求的串
 vis表示已求过是否能推导出空串的非终结符，用于避免左递归
@@ -60,7 +59,7 @@ function nullable(symbols, vis, G) {
                 for (let p of G.P) {
                     if (p[0] == s) {
                         vis[s] = true
-                        let isNull = nullable(p, vis, G)
+                        let isNull = nullable(p[1], vis, G)
                         vis[s] = false
                         if(isNull)
                             // 如果能推导出空串，则直接跳出循环

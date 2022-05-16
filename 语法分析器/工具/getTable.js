@@ -2,8 +2,19 @@ let { getFirst } = require("./getFirst.js")
 let { Edges, Nodes } = require("../数据结构/DFA.js")
 let { getItem } = require("./getItem.js")
 
+// 查看I中是否已经有相同的产生式
+function findSame(I, exp, Vs) {
+    let stringExp = [exp[0], exp[1].join(""), exp[2].join("")].join("")
+    for(let p of I) {
+        let stringP = [p[0], p[1].join(""), p[2].join("")].join("")
+        if(stringExp == stringP)
+            return true
+    }
+    return false
+}
+
 // update函数功能：得到新的向前搜索符后更新项目集的产生式（一个产生式的向前搜索符不一定能一次性求完）
-function update(I, exp, Vs, vis) {
+function update(I, exp, Vs, vis, G) {
     let stringExp = [exp[0], exp[1].join("")].join(""), pointPos = exp[1].indexOf("·"), len = exp[1].length
     if(vis[stringExp])
         return
@@ -18,24 +29,70 @@ function update(I, exp, Vs, vis) {
             hasFindSame = true
             let setP = new Set(p[2]), setExp = new Set(exp[2]), setUnion = new Set([...setP, ...setExp])
             p[2] = [...setUnion]
+            break
         }
     }
     // 如果没有找到可更新产生式，说明这是一个新产生式。直接加入项目集即可。
     if(!hasFindSame)
         return false
     // 到此为止exp已经把项目集I中与其产生式相等的产生式的向前搜索符更新完毕。但是如果exp中的·后面是非终结符，我们要继续更新。
+    // 对于这些扩展出来的产生式，我们不确定当前新增的向前搜索符是否可以直接并入它们的向前搜索符集合。
     if(pointPos < len - 1) {
         let nextChar = exp[1][pointPos + 1], isVs = Vs.indexOf(nextChar) == -1 ? false : true
+        // 重新计算该产生式扩展出来的产生式的向前搜索符
+        let forward = getForward(exp, pointPos + 1, G);
         if(isVs) {
-            // 如果当前·后是非终结符，那么继续更新
+            // 如果当前·后是非终结符，那么进行更新。
             for(let p of I) {
-                // 在I中找到产生式左侧是该非终结符且右侧第一个符号为·的产生式，需要更新之。
-                if(p[0] == nextChar && p[1][0] == "·")
-                    update(I, [p[0], p[1], exp[2]], Vs, vis)
+                // 在I中找到产生式左侧是该非终结符且右侧第一个符号为·的产生式。我们需要判断其是否可以更新，不是所有新增的向前搜索符都能作用到扩展产生式上。
+                if(p[0] == nextChar && p[1][0] == "·") {
+                    // 计算新旧向前搜索符集合的差集，新集合为forward，旧集合为p[2]
+                    let difference = [...forward].filter(char => p[2].indexOf(char) == -1)
+                    // 有差异时才说明exp的向前搜索符作用到了扩展产生式上，才需要进一步更新
+                    if(difference.length)
+                        // 更新
+                        update(I, [p[0], p[1], difference], Vs, vis, G)
+                }
             }
         }
     }
     return true
+}
+
+// 计算向前搜索符函数
+function getForward(p, nextCharPos, G) {
+    let rightExp = p[1], len = rightExp.length, rest = [], forward = [...p[2]]
+    if(nextCharPos == len - 1) {
+        // 如果该非终结符在产生式末尾，那么rest为”当前项目的向前搜索符“
+        loop: for(let i = 0; i < p[2].length; i ++) {
+            rest = [p[2][i]]
+            let firstSet = new Set()
+            getFirst(rest, firstSet, [], G)
+            firstSet = [...firstSet];
+            // firstSet求出来一定是数组，规定如果含有空时，getFirst返回["\0"]，即["\x00"]。此时按照LR1向前搜索符要求，应为#
+            // 注意：是含有空而不是只有空。只要firstSet中含有\x00时都应该对其处理
+            if(firstSet.indexOf("\x00") != -1)
+                firstSet.splice(firstSet.indexOf("\x00"), 1, "#")
+            // 把求出的first集作为可能的向前搜索符加入向前搜索符集合中，注意可能求出相同向前搜索符，应满足集合性质
+            forward = new Set([...forward, ...firstSet])
+            forward = [...forward]
+        }
+    } else {
+        // 如果该非终结符不在产生式末尾，那么rest为“该非终结符后面的符号串”再加上“当前项目的向前搜索符”
+        rest = rightExp.slice(nextCharPos + 1)
+        for(let i = 0; i < p[2].length; i ++) {
+            rest.push(p[2][i])
+            let firstSet = new Set()
+            getFirst(rest, firstSet, [], G)
+            firstSet = [...firstSet];
+            rest.pop()
+            if(firstSet.indexOf("\x00") != -1)
+                firstSet.splice(firstSet.indexOf("\x00"), 1, "#")
+            forward = new Set([...forward, ...firstSet])
+            forward = [...forward]
+        }
+    }
+    return forward
 }
 
 // LR1分析中的求项目集空闭包函数
@@ -47,42 +104,19 @@ function getClosure(I, G) {
             // 当·不在产生式末尾时做如下处理
             // nextChar表示·后面下一个符号，isInVs表示该符号是否是非终结符，nextCharPos表示当前非终结符在产生式右侧的位置
             let nextChar = rightExp[pos + 1], isInVs = G.Vs.indexOf(nextChar) == -1 ? false : true, nextCharPos = pos + 1
-
             if(isInVs) {
                 // 如果是非终结符，需要添加新的项目，在添加新项目前，先找到其向前搜索符
-                // rest表示参与计算新加入项目的向前搜索符的中间参数。实际含义就是“该非终结符后面的符号串”再加上“当前项目的向前搜索符”，用数组存储
-                // forward表示新添加的项目的向前搜索符集合
-                let rest, forward = []
-                if(nextCharPos == len - 1) {
-                    // 如果该非终结符在产生式末尾，那么rest为”当前项目的向前搜索符“
-                    loop: for(let i = 0; i < p[2].length; i ++) {
-                        rest = [p[2][i]]
-                        let firstSet = []
-                        getFirst(rest, firstSet, [], G)
-                        // firstSet求出来一定是数组，规定如果是空时，getFirst返回["\0"]，即["\x00"]。此时按照LR1向前搜索符要求，应为#
-                        if(firstSet[0] == "\x00")
-                            firstSet = ["#"]
-                        // 把求出的first集作为可能的向前搜索符加入向前搜索符集合中
-                        forward = [...forward, ...firstSet]
-                    }
-                } else {
-                    // 如果该非终结符不在产生式末尾，那么rest为“该非终结符后面的符号串”再加上“当前项目的向前搜索符”
-                    rest = rightExp.slice(nextCharPos + 1)
-                    for(let i = 0; i < p[2].length; i ++) {
-                        rest.push(p[2][i])
-                        let firstSet = []
-                        getFirst(rest, firstSet, [], G)
-                        forward = [...forward, ...firstSet]
-                    }
-                }
+                // 计算向前搜索符集合
+                let forward = getForward(p, nextCharPos, G)
+
                 // 如果是非终结符，那么需要在该项目集中添加新的项目
                 loop: for(let pp of G.expand) {
                     // LExp表示产生式左侧，RExp表示产生式右侧
                     let LExp = pp[0], RExp = pp[1]
                     if(LExp == nextChar && RExp[0] == "·") {
                         let newExp = [...pp, forward]
-                        // hasFindSame表示newExp是否在I项目集中找到相同的产生式。在调用update时也会对与newExp相同的产生式进行向前搜索符更新
-                        let hasFindSame = update(I, newExp, G.Vs, [])
+                        // hasFindSame表示newExp是否在I项目集中找到相同的产生式。
+                        let hasFindSame = update(I, newExp, G.Vs, [], G)
                         if(hasFindSame)
                             continue loop
                         // 如果存在一个项目产生式，左侧是当前非终结符，且右侧第一个符号是项目符号。那么将其加入当前项目集，其向前搜索符上述代码已求解
@@ -291,6 +325,7 @@ function getTable(ISet, nodes, G) {
                 goto[i + 1][goto[0].indexOf(edges[j].val)] = edges[j].itemNum
         }
     }
+    console.log(nodes[7].item)
     return { action, goto }
 }
 

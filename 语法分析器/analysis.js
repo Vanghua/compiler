@@ -19,7 +19,6 @@ async function analysis(input, action, goto, G, tokens) {
     let charPos = 0, step = 0
     // 语法分析过程表
     let s = "步骤\t状态栈\t符号栈\t输入串\tAction\tGOTO\t\n"
-
     while(true) {
         let char = input[charPos]
         // 如果当前指针所指输入串位置的符号不为终结符#，那么令当前符号和当前栈顶状态进行分析
@@ -28,6 +27,7 @@ async function analysis(input, action, goto, G, tokens) {
         if(!act) {
             return new Promise((res, rej) => {
                 rej(throwAnalysisError(tokens[charPos - 1].row, tokens[charPos - 1].col, "语法错误", "不符合C语言语法"))
+                // rej(s)
             })
         } else if(act[0] == "S") {
             // 打印语法分析步骤
@@ -71,8 +71,6 @@ async function analysis(input, action, goto, G, tokens) {
     }
     return { s, root }
 }
-
-
 
 // LR1语法分析控制程序
 async function work(G, tokens, input) {
