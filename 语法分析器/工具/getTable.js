@@ -325,7 +325,6 @@ function getTable(ISet, nodes, G) {
                 goto[i + 1][goto[0].indexOf(edges[j].val)] = edges[j].itemNum
         }
     }
-    console.log(nodes[7].item)
     return { action, goto }
 }
 

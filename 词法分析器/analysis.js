@@ -12,7 +12,7 @@ let beginPos, forwardPos
 // 记录词法分析的所有token
 let tokens = []
 // 记录当前代码的行和列，初始时没有读入字符，列为0，行为1，当读入字符时列加1
-let row = 1, col = 0
+let row = 1, col = 0, lastCol
 
 // file为文件标识符，read为读取文件的函数，这些变量由初始化函数赋初值
 let file, read
@@ -44,6 +44,8 @@ async function reRead() {
 
 // 根据当前字符更新当前词素尾指针的行列信息
 function updateRowCol(c) {
+    // 记录上一个col
+    lastCol = col
     // 如果当前字符不是换行，那么列数加1。
     if(c !== "\n")
         col++
@@ -77,6 +79,14 @@ function getToken(tokenType) {
     // 记录当前词素的行列信息，方便错误提示
     token.row = row
     token.col = col - token.content.length + 1
+
+    // 出错处理（后来debug添加，句尾缺少分号）
+    if(token.col == -1) {
+        col = 0
+        row --
+        token.row --
+        token.col = lastCol
+    }
 
     // 如果当前是“标识符或关键字”的接收态调用了该回退函数，即tokenType为下述字符串，此时需要调用utils的函数判断这是标识符还是关键字
     // 其余情况直接使用传过来的种类码tokenType即可

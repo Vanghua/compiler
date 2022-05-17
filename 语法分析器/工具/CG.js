@@ -6,10 +6,12 @@ let statement = [
     ["statement", ["onlyIfChoice"]],
     ["statement", ["ifElseIfChoice"]],
     ["statement", ["ifElseChoice"]],
+    ["statement", ["loopStatement"]],
     // 表达式
     ["exp", ["declaration"]],
     ["exp", ["assignment"]],
-
+    ["exp", ["calStatement"]],
+    ["exp", ["cpStatement"]],
 
     // 声明语句
     ["declaration", ["basicDeclaration"]], // 赋值或不赋值的基本类型声明语句
@@ -65,10 +67,43 @@ let statement = [
     ["assignment", ["identifier", "=", "constant"]], // 常数赋给一个变量
     ["assignment", ["identifier", "=", "character"]], // 字符赋给一个变量
     ["assignment", ["identifier", "=", "string"]], // 字符串赋给一个变量
+    ["assignment", ["identifier", "=", "identifier", "+", "identifier"]], // 假的
     ["assignment", ["identifier", "=", "identifier", "assignment"]],
     ["assignment", ["identifier", "=", "constant", "assignment"]],
     ["assignment", ["identifier", "=", "character", "assignment"]],
     ["assignment", ["identifier", "=", "string", "assignment"]],
+    ["assignment", ["identifier", "+=", "identifier"]],
+    ["assignment", ["identifier", "-=", "identifier"]],
+    ["assignment", ["identifier", "*=", "identifier"]],
+    ["assignment", ["identifier", "/=", "identifier"]],
+    ["assignment", ["identifier", "%=", "identifier"]],
+    ["assignment", ["identifier", "+=", "constant"]],
+    ["assignment", ["identifier", "-=", "constant"]],
+    ["assignment", ["identifier", "*=", "constant"]],
+    ["assignment", ["identifier", "/=", "constant"]],
+    ["assignment", ["identifier", "%=", "constant"]],
+    ["assignment", ["identifier", "+=", "character"]],
+    ["assignment", ["identifier", "-=", "character"]],
+    ["assignment", ["identifier", "*=", "character"]],
+    ["assignment", ["identifier", "/=", "character"]],
+    ["assignment", ["identifier", "%=", "character"]],
+
+    // 运算语句
+    ["calChar", ["identifier"]],
+    ["calChar", ["constant"]],
+    ["calStatement", ["calChar", "+", "calChar"]],
+    ["calStatement", ["calChar", "++"]],
+    ["calStatement", ["calChar", "--"]],
+    ["calStatement", ["calChar", "*", "calChar"]],
+    ["calStatement", ["calChar", "/", "calChar"]],
+    ["calStatement", ["calChar", "%", "calChar"]],
+
+    // 比较语句
+    ["cpStatement", ["calChar", "<", "calChar"]],
+    ["cpStatement", ["calChar", "<=", "calChar"]],
+    ["cpStatement", ["calChar", ">", "calChar"]],
+    ["cpStatement", ["calChar", ">=", "calChar"]],
+    ["cpStatement", ["calChar", "==", "calChar"]],
 
     // 选择语句
     ["onlyIfChoice", ["if", "(", "exp", ")", "block"]], // <仅含有单个if的选择语句> => <if><终结符"("><语句><终结符")"><语句块>
@@ -76,9 +111,13 @@ let statement = [
     ["ifElseIfChoice", ["onlyIfChoice", "else", "ifElseIfChoice"]], // if,elseif语句可以是if+else+多条ifElse语句组成
     ["ifElseChoice", ["onlyIfChoice", "else", "block"]], // if,else语句可以只是if语句
 
+    // 循环语句
+    ["loopStatement", ["for", "(", "declaration", ";", "cpStatement", ";", "calStatement", ")", "block"]],
+    ["loopStatement", ["while", "(", "cpStatement", ")", "block"]],
+
     // 代码块
     ["block", ["statement"]], // 代码块可以是一条不被大括号包围的语句
-    ["block", ["{", "multiStatement", "}"]], // 代码块可以是多条语句
+    ["block", ["{", "statement", "}"]], // 代码块可以是多条语句
 
     // 多条语句
     ["multiStatement", ["statement"]], // 多条语句可以是一条语句
@@ -132,7 +171,8 @@ let Vs = [
     'multiDeclaration', 'structDeclaration', 'primaryStructDeclaration',
     'valueStructDeclaration',   'primaryFunctionDeclaration', 'valueFunctionDeclaration',
     'declaration_list', 'program', 'multiFunction',
-    'exp'
+    'exp',  'calStatement', 'calChar',
+    'cpStatement',  'loopStatement'
 ]
 
 let G = {
