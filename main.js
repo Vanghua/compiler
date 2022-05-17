@@ -30,7 +30,7 @@ async function run() {
         // 运行语法分析器
         let root = await SyntaxWork(G, tokens, input)
         // 返回词法分析和语法分析结果
-        return  {
+        return {
             root, tokens
         }
     } catch(err) {

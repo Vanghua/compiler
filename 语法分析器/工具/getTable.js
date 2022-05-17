@@ -108,7 +108,6 @@ function getClosure(I, G) {
                 // 如果是非终结符，需要添加新的项目，在添加新项目前，先找到其向前搜索符
                 // 计算向前搜索符集合
                 let forward = getForward(p, nextCharPos, G)
-
                 // 如果是非终结符，那么需要在该项目集中添加新的项目
                 loop: for(let pp of G.expand) {
                     // LExp表示产生式左侧，RExp表示产生式右侧

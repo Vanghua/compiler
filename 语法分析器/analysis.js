@@ -26,8 +26,22 @@ async function analysis(input, action, goto, G, tokens) {
         let col = action[0].indexOf(char), act = action[state + 1][col]
         if(!act) {
             return new Promise((res, rej) => {
-                rej(throwAnalysisError(tokens[charPos - 1].row, tokens[charPos - 1].col, "语法错误", "不符合C语言语法"))
-                // rej(s)
+                let output = throwAnalysisError(tokens[charPos - 1].row, tokens[charPos - 1].col, "语法错误", `${tokens[charPos - 1].content}后不符合C语言语法<br>`)
+                let fix = []
+                for(let i = 1; i < action[0].length; i ++) {
+                    let act = action[state + 1][i]
+                    if(act) {
+                        if(act[0] == "r") {
+                            let Vt = action[0][i]
+                            if (Vt != "#" && Vt != "\x00")
+                                fix.push(Vt)
+                        }
+                    }
+                }
+                if(fix.length == 0)
+                    fix.push('"无建议"')
+                output += "建议填补以下符号 " + fix.join(" ")
+                rej(output)
             })
         } else if(act[0] == "S") {
             // 打印语法分析步骤

@@ -17,7 +17,7 @@ let statement = [
     ["declaration", ["basicDeclaration"]], // 赋值或不赋值的基本类型声明语句
     ["declaration", ["structDeclaration"]], // 赋值或者不赋值的结构体声明语句
     ["declaration", ["primaryFunctionDeclaration"]], // 不带赋值的函数声明语句
-    // 1.基本类型声明语句
+    // 基本类型声明语句
     ["basicDeclaration", ["primaryType", "identifier_list"]],
     ["primaryType", ["char"]],
     ["primaryType", ["int"]],
@@ -35,31 +35,19 @@ let statement = [
     ["identifier_list", ["assignment"]], // <标识符列表> => <赋值语句>
     ["identifier_list", ["identifier", ",", "identifier_list"]], // <标识符列表> => <标识符><,><标识符列表>
     ["identifier_list", ["assignment", ",", "identifier_list"]], // <标识符列表> => <标识符><,><标识符列表>
-    // 2.结构体声明语句
-    ["structDeclaration", ["primaryStructDeclaration"]],
-    ["structDeclaration", ["valueStructDeclaration"]],
-    // 2.1 无赋值的结构体声明语句
-    ["primaryStructDeclaration", ["struct", "identifier", "{", "multiDeclaration", "}"]], // 声明一个无赋值的结构体变量
-    ["primaryStructDeclaration", ["struct", "{", "multiDeclaration", "}"]], // 声明一个匿名结构体变量
-    // 2.2 带有赋值的结构体声明语句
-    ["valueStructDeclaration", ["primaryStructDeclaration", "identifier_list"]],
-    // 2.3 多条声明语句
+    // 多条声明语句
     ["multiDeclaration", ["declaration", ";"]], // 多条基本类型声明语句可以推出一条声明语句
     ["multiDeclaration", ["multiDeclaration", "declaration", ";"]], // 多条基本类型声明语句可以推出多条声明语句
-    // 3.函数声明语句
-    // 3.1 无赋值的函数声明语句
+    // 函数声明语句
+    // 无赋值的函数声明语句
     ["primaryFunctionDeclaration", ["primaryType", "identifier", "(", "declaration_list", ")"]],
     ["primaryFunctionDeclaration", ["void", "identifier", "(", "declaration_list", ")"]],
     ["primaryFunctionDeclaration", ["primaryType", "identifier", "(", ")"]],
     ["primaryFunctionDeclaration", ["void", "identifier", "(", ")"]],
-    ["primaryFunctionDeclaration", ["struct", "identifier", "(", "declaration_list", ")"]],
-    ["primaryFunctionDeclaration", ["struct", "identifier", "(", ")"]],
-    // 3.2 函数声明时的参数列表
+    // 函数声明时的参数列表
     ["declaration_list", ["primaryType", "identifier"]],
     ["declaration_list", ["primaryType", "identifier", "declaration_list", ","]],
-    ["declaration_list", ["struct", "identifier", "identifier"]],
-    ["declaration_list", ["struct", "identifier", "identifier", ",", "declaration_list"]],
-    // 3.3 赋值的函数声明语句
+    // 赋值的函数声明语句
     ["valueFunctionDeclaration", ["primaryFunctionDeclaration", "{", "multiStatement", "}"]], // 带有赋值的函数声明特殊，不需要；结尾
 
     // 基本类型赋值语句
@@ -124,9 +112,7 @@ let statement = [
     ["multiStatement", ["statement", "multiStatement"]], // 多条语句可以由多个一条语句组成
 
     // 程序入口
-    ["program", ["multiDeclaration"]], // 可以是多条声明语句
     ["program", ["valueFunctionDeclaration"]], // 可以是带有赋值的函数声明
-    // ["program", ["program", "valueFunctionDeclaration"]]
 ]
 
 // 终结符
@@ -168,8 +154,7 @@ let Vs = [
     'assignment_list',  'assignment_type', 'onlyIfChoice',
     'ifElseIfChoice',   'ifElseChoice', 'block',
     'multiStatement',   'basicDeclaration', 'program',
-    'multiDeclaration', 'structDeclaration', 'primaryStructDeclaration',
-    'valueStructDeclaration',   'primaryFunctionDeclaration', 'valueFunctionDeclaration',
+    'multiDeclaration', 'primaryFunctionDeclaration', 'valueFunctionDeclaration',
     'declaration_list', 'program', 'multiFunction',
     'exp',  'calStatement', 'calChar',
     'cpStatement',  'loopStatement'

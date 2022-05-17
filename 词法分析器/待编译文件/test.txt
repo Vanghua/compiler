@@ -1,15 +1,13 @@
-int main() {
+int main() 
 int a = 1, b;
 if(a > 0) {
 b = a + b;
 } else {
 b = 0;
 }
-for(int i = 1; i < 10; i++)
+for(int i = 1;i < 10; i++)
  b ++;
 while(b < 20) {
  b ++;
 }
-int c = a + b;
-c++;
 }
