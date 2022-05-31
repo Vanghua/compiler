@@ -31,7 +31,7 @@ async function analysis(input, action, goto, G, tokens) {
                 for(let i = 1; i < action[0].length; i ++) {
                     let act = action[state + 1][i]
                     if(act) {
-                        if(act[0] == "r") {
+                        if(act[0]) {
                             let Vt = action[0][i]
                             if (Vt != "#" && Vt != "\x00")
                                 fix.push(Vt)
@@ -41,6 +41,8 @@ async function analysis(input, action, goto, G, tokens) {
                 if(fix.length == 0)
                     fix.push('"无建议"')
                 output += "建议填补以下符号 " + fix.join(" ")
+                output = output.replace("constant", "数值")
+                output = output.replace("identifier", "标识符")
                 rej(output)
             })
         } else if(act[0] == "S") {
