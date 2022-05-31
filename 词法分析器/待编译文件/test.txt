@@ -1,4 +1,13 @@
 int main() {
-  int b;
-  b +
+int a = 1, b;
+if(a > 0) {
+b = ;
+} else {
+b = 0;
+}
+for(int i = 1;i < 10; i++)
+ b ++;
+while(b < 20) {
+ b ++;
+}
 }

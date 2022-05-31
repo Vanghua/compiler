@@ -40,9 +40,23 @@ async function analysis(input, action, goto, G, tokens) {
                 }
                 if(fix.length == 0)
                     fix.push('"无建议"')
-                output += "建议填补以下符号 " + fix.join(" ")
-                output = output.replace("constant", "数值")
-                output = output.replace("identifier", "标识符")
+                fix.forEach((el, index) => {
+                    switch(el) {
+                        case "constant":
+                            fix[index] = "数值"
+                            break
+                        case "identifier":
+                            fix[index] = "标识符"
+                            break
+                        case "character":
+                            fix[index] = "字符"
+                            break
+                        case "string":
+                            fix[index] = "字符串"
+                            break
+                    }
+                })
+                output += "建议填补以下符号 " + fix.join(",")
                 rej(output)
             })
         } else if(act[0] == "S") {
