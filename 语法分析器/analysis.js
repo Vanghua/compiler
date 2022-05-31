@@ -3,6 +3,7 @@ let { TNode } = require("./数据结构/SyntaxTree.js")
 let { write } = require("./测试/write.js")
 let { throwAnalysisError } = require("../词法分析器/utils.js")
 const { deepClone } = require("./工具/deepClone.js")
+const { handleError } = require("./工具/handleError.js")
 
 // 获取栈顶元素但不弹出
 const getTop = stack => stack[stack.length - 1]
@@ -25,40 +26,8 @@ async function analysis(input, action, goto, G, tokens) {
         let state = getTop(stateStack)
         let col = action[0].indexOf(char), act = action[state + 1][col]
         if(!act) {
-            return new Promise((res, rej) => {
-                let output = throwAnalysisError(tokens[charPos - 1].row, tokens[charPos - 1].col, "语法错误", `${tokens[charPos - 1].content}后不符合C语言语法<br>`)
-                let fix = []
-                for(let i = 1; i < action[0].length; i ++) {
-                    let act = action[state + 1][i]
-                    if(act) {
-                        if(act[0]) {
-                            let Vt = action[0][i]
-                            if (Vt != "#" && Vt != "\x00")
-                                fix.push(Vt)
-                        }
-                    }
-                }
-                if(fix.length == 0)
-                    fix.push('"无建议"')
-                fix.forEach((el, index) => {
-                    switch(el) {
-                        case "constant":
-                            fix[index] = "数值"
-                            break
-                        case "identifier":
-                            fix[index] = "标识符"
-                            break
-                        case "character":
-                            fix[index] = "字符"
-                            break
-                        case "string":
-                            fix[index] = "字符串"
-                            break
-                    }
-                })
-                output += "建议填补以下符号 " + fix.join(",")
-                rej(output)
-            })
+            // 如果找不到，那么交给错误处理程序处理。错误处理程序能够预测错误的修复方案并修复，从而进行后续的编译
+            return handleError(tokens[charPos - 1], state, action)
         } else if(act[0] == "S") {
             // 打印语法分析步骤
             s += `(${++step})\t${stateStack.join("")}\t${charStack.join("")}\t${input.slice(charPos).join(" ")}\t${act}\t\n`
