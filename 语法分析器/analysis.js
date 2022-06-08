@@ -36,19 +36,18 @@ async function analysis(input, action, goto, G, tokens) {
             // fixedChar表示错误处理程序预测的修补符号。每次遇到错误时都会做出预测尽量弥补，直到预测结果为空或编译结束才抛出错误。
             let token = tokens[charPos - 1]
             let fixedChar = handleError(token, state, action)[0]
+            // 保存错误信息
+            errors += throwAnalysisError(token.row, token.col, "语法错误", `${token.content}后不符合C语言语法<br>`)
             // 如果无法预测（即：当前状态只有唯一的接收非终结符时，那么直接抛出错误）
             if(!fixedChar)
                 return new Promise((res, rej) => {
-                    rej(throwAnalysisError(token.row, token.col, "语法错误", `${token.content}后不符合C语言语法<br>`))
+                    rej(errors)
                 })
             // 将预测的结果填入输入代码，需要修改输入代码和token信息
             input.splice(charPos, 0, fixedChar)
             let t = new Token()
             t.content = fixedChar
             tokens.splice(charPos, 0, t)
-
-            // 保存错误信息
-            errors += throwAnalysisError(token.row, token.col, "语法错误", `${token.content}后不符合C语言语法<br>`)
         } else if(act[0] == "S") {
             // 打印语法分析步骤
             s += `(${++step})\t${stateStack.join("")}\t${charStack.join("")}\t${input.slice(charPos).join(" ")}\t${act}\t\n`
