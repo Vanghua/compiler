@@ -4,6 +4,7 @@ let { write } = require("./测试/write.js")
 let { throwAnalysisError } = require("../词法分析器/utils.js")
 const { deepClone } = require("./工具/deepClone.js")
 const { handleError } = require("./工具/handleError.js")
+const { Token } = require("../词法分析器/数据结构/Token");
 
 // 获取栈顶元素但不弹出
 const getTop = stack => stack[stack.length - 1]
@@ -15,6 +16,8 @@ async function analysis(input, action, goto, G, tokens) {
     // 初始化状态栈和符号栈和token栈
     stateStack.push(0)
     charStack.push("#")
+    // 编译中遇到的错误信息集
+    let errors = ""
 
     // charPos表示已读取的输入串字符的位置，step表示语法分析第几步
     let charPos = 0, step = 0
@@ -27,7 +30,25 @@ async function analysis(input, action, goto, G, tokens) {
         let col = action[0].indexOf(char), act = action[state + 1][col]
         if(!act) {
             // 如果找不到，那么交给错误处理程序处理。错误处理程序能够预测错误的修复方案并修复，从而进行后续的编译
-            return handleError(tokens[charPos - 1], state, action)
+            // return handleError(...)是老版本的错误处理，遇到错误直接抛出，并对当前错误做出预测
+            // return handleError(tokens[charPos - 1], state, action)
+
+            // fixedChar表示错误处理程序预测的修补符号。每次遇到错误时都会做出预测尽量弥补，直到预测结果为空或编译结束才抛出错误。
+            let token = tokens[charPos - 1]
+            let fixedChar = handleError(token, state, action)[0]
+            // 如果无法预测（即：当前状态只有唯一的接收非终结符时，那么直接抛出错误）
+            if(!fixedChar)
+                return new Promise((res, rej) => {
+                    rej(throwAnalysisError(token.row, token.col, "语法错误", `${token.content}后不符合C语言语法<br>`))
+                })
+            // 将预测的结果填入输入代码，需要修改输入代码和token信息
+            input.splice(charPos, 0, fixedChar)
+            let t = new Token()
+            t.content = fixedChar
+            tokens.splice(charPos, 0, t)
+
+            // 保存错误信息
+            errors += throwAnalysisError(token.row, token.col, "语法错误", `${token.content}后不符合C语言语法<br>`)
         } else if(act[0] == "S") {
             // 打印语法分析步骤
             s += `(${++step})\t${stateStack.join("")}\t${charStack.join("")}\t${input.slice(charPos).join(" ")}\t${act}\t\n`
@@ -41,7 +62,7 @@ async function analysis(input, action, goto, G, tokens) {
         } else if(act == "acc") {
             // 语法分析步骤
             s += `(${++step})\t${stateStack.join("")}\t${charStack.join("")}\t${input.slice(charPos).join(" ")}\t${act}\t\n`
-            return Promise.resolve({ s, root })
+            return Promise.resolve({ s, root, errors })
         } else {
             // 打印语法分析步骤
             let outputPart = `(${++step})\t${stateStack.join("")}\t${charStack.join("")}\t${input.slice(charPos).join(" ")}\t${act}\t`
@@ -68,7 +89,7 @@ async function analysis(input, action, goto, G, tokens) {
             nodeStack.push(root)
         }
     }
-    return { s, root }
+    return { s, root, errors }
 }
 
 // LR1语法分析控制程序
@@ -79,11 +100,13 @@ async function work(G, tokens, input) {
         // 获取action表和goto表
         let {action, goto} = LR1Table(G)
         // 进行LR1语法分析
-        let {s, root} = await analysis(input, action, goto, G, tokens)
+        let {s, root, errors} = await analysis(input, action, goto, G, tokens)
         // 讲语法分析过程打印出来
         await write(action, goto, s)
-        // 返回语法分析结果：语法树
-        return Promise.resolve(root)
+        // 返回语法分析结果：语法树，所有语法错误信息
+        return Promise.resolve({
+            root, errors
+        })
     } catch(err) {
         return new Promise((res, rej) => {
             rej(err)

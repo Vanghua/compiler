@@ -42,11 +42,16 @@ function handleError(token, state, action) {
     })
 
     // output为原来抛出错误版本中显示错误内容的字符串，在当前版本下可以用来debug
-    let output = throwAnalysisError(token.row, token.col, "语法错误", `${token.content}后不符合C语言语法<br>`)
-    output += "建议填补以下符号 " + fix.join(",")
-    return new Promise((res, rej) => {
-        rej(output)
-    })
+    // let output = throwAnalysisError(token.row, token.col, "语法错误", `${token.content}后不符合C语言语法<br>`)
+    // output += "建议填补以下符号 " + fix.join(",")
+    // return new Promise((res, rej) => {
+    //     rej(output)
+    // })
+
+    // 如果预测结果为空，res数组第一个预测结果设置为null，用于外界判断预测结果。
+    if(!res.length)
+        res.push(null)
+    return res
 }
 
 module.exports.handleError = handleError

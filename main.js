@@ -28,10 +28,10 @@ async function run() {
         // 把token中加工成输入串
         let input = changeToken(tokens)
         // 运行语法分析器
-        let root = await SyntaxWork(G, tokens, input)
+        let { root, errors } = await SyntaxWork(G, tokens, input)
         // 返回词法分析和语法分析结果
         return {
-            root, tokens
+            root, tokens, errors
         }
     } catch(err) {
         return new Promise((res, rej) => {

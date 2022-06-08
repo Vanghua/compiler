@@ -29,11 +29,10 @@ http.createServer(async function(req, res) {
             let buf = Buffer.from(chunk, 'utf8')
             await fss.writeFile("./词法分析器/待编译文件/test.txt", buf)
             try {
-                let {root, tokens} = await run()
-                res.write(JSON.stringify({ root, tokens }))
+                let {root, tokens, errors} = await run()
+                res.write(JSON.stringify({ root, tokens, errors }))
                 res.end()
             } catch(err) {
-                console.log(err)
                 res.writeHead(200, {'Content-Type': 'text/plain; charset=utf-8'});
                 res.write(err)
                 res.end()

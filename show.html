@@ -35,7 +35,7 @@
                     tokens.innerHTML = res
                 }
                 else {
-                    let {root, tokens} = JSON.parse(res)
+                    let {root, tokens, errors} = JSON.parse(res)
 
                     // 将语法树数据转化为指定格式
                     let treeData = []
@@ -85,12 +85,18 @@
 
                     draw(treeData)
 
-                    // 序列化处理tokens
-                    let len = tokens.length
-                    for (let i = 0; i < len; i++)
-                        tokens[i] = `{ content: ${tokens[i].content}, row: ${tokens[i].row}, col: ${tokens[i].col}, type: ${tokens[i].type} }<br>`
-                    tokens = tokens.join("\n")
-                    document.querySelector("#tokens").innerHTML = tokens
+                    if(errors == "") {
+                        // 如果语法分析没有错误，序列化处理tokens
+                        let len = tokens.length
+                        for (let i = 0; i < len; i++)
+                            tokens[i] = `{ content: ${tokens[i].content}, row: ${tokens[i].row}, col: ${tokens[i].col}, type: ${tokens[i].type} }<br>`
+                        tokens = tokens.join("\n")
+                        document.querySelector("#tokens").innerHTML = tokens
+                    } else {
+                        // 如果在语法分析时遇到错误，那么在显示token的位置打印错误
+                        let tokens = document.getElementById("tokens")
+                        tokens.innerHTML = errors
+                    }
                 }
             })
         }
